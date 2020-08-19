@@ -9,9 +9,7 @@ AbstractImage::AbstractImage(int width, int height, QString name, QImage image)
 }
 
 AbstractImage::~AbstractImage()
-{
-
-}
+{}
 
 int AbstractImage::getWidth()
 {
@@ -35,4 +33,21 @@ QImage AbstractImage::getLayer(int index)
         return m_layers[index];
     }
     return QImage();
+}
+
+int AbstractImage::getLayersCount()
+{
+    return m_layers.size();
+}
+
+QImage AbstractImage::getOriginalImage()
+{
+    return m_layers.at(0);
+}
+
+void AbstractImage::addPyramid(QList<QImage> layers)
+{
+    for(auto & layer : layers) {
+        m_layers.append(layer);
+    }
 }

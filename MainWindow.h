@@ -9,6 +9,8 @@
 
 #include "AbstractImage.h"
 #include "Image.h"
+#include "ILayerHandler.h"
+#include "NearestNeighborLayerHandler.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -26,7 +28,7 @@ public slots:
     void openFile();
 
 private:
-    void addImage(QString fileName);
+    void addImage(QString &fileName);
     void changeCurrentImage(int index);
     void changeCurrentLayer(int index);
 

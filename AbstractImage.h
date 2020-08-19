@@ -15,12 +15,16 @@ public:
     AbstractImage(int width, int height, QString name, QImage image);
     virtual ~AbstractImage();
 
-    int getWidth();
-    int getHeight();
-    QString getName();
-    QImage getLayer(int index);
+    virtual int getWidth();
+    virtual int getHeight();
+    virtual QString getName();
+    virtual QImage getLayer(int index);
+    virtual int getLayersCount();
+    virtual QImage getOriginalImage();
 
-private:
+    virtual void addPyramid(QList<QImage> layers);
+
+protected:
     int m_width{0};
     int m_height{0};
     QString m_name{};

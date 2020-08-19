@@ -18,6 +18,7 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
     AbstractImage.cpp \
     Image.cpp \
+    NearestNeighborLayerHandler.cpp \
     main.cpp \
     MainWindow.cpp
 
@@ -25,7 +26,8 @@ HEADERS += \
     AbstractImage.h \
     ILayerHandler.h \
     Image.h \
-    MainWindow.h
+    MainWindow.h \
+    NearestNeighborLayerHandler.h
 
 FORMS += \
     MainWindow.ui
