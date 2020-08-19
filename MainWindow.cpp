@@ -49,7 +49,14 @@ void MainWindow::addImage(QString &fileName)
     QFileInfo info(file);
     QImage image(fileName);
     Image img(image.width(), image.height(), info.fileName(), image);
-    m_imagesList.append(img);
+    int insertIndex=0;
+    for (int i=m_imagesList.size()-1; i > 0; i--) {
+        if(m_imagesList[i].getDiagonal() <= img.getDiagonal()) {
+            insertIndex=i;
+            break;
+        }
+    }
+    m_imagesList.insert(insertIndex, img);
 
     ILayerHandler * layerHandler;
     //построение слоев будет осуществляться методом k ближайших соседей
@@ -57,12 +64,12 @@ void MainWindow::addImage(QString &fileName)
     //генерация пирамиды
     QList<QImage> images = layerHandler->generatePyramid(2.0, img);
     //добавление результата к картинке
-    m_imagesList[m_imagesList.size()-1].addPyramid(images);
+    m_imagesList[insertIndex].addPyramid(images);
 
     //отрисовка добавленного с компьютера изображения на сцене
     m_scene->addPixmap(QPixmap::fromImage(image));
-    ui->fileComboBox->addItem(img.getName());
-    ui->fileComboBox->setCurrentIndex(ui->fileComboBox->count()-1);
+    ui->fileComboBox->insertItem(insertIndex, img.getName());
+    ui->fileComboBox->setCurrentIndex(insertIndex);
 }
 
 void MainWindow::changeCurrentImage(int index)

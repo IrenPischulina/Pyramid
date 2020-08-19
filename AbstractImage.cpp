@@ -6,6 +6,7 @@ AbstractImage::AbstractImage(int width, int height, QString name, QImage image)
       m_name(name)
 {
     m_layers.append(image);
+    m_diagonal = sqrt(pow(m_width, 2) + pow(m_height, 2));
 }
 
 AbstractImage::~AbstractImage()
@@ -19,6 +20,11 @@ int AbstractImage::getWidth()
 int AbstractImage::getHeight()
 {
     return m_height;
+}
+
+double AbstractImage::getDiagonal()
+{
+    return m_diagonal;
 }
 
 QString AbstractImage::getName()

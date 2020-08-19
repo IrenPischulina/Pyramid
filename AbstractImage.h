@@ -17,6 +17,7 @@ public:
 
     virtual int getWidth();
     virtual int getHeight();
+    virtual double getDiagonal();
     virtual QString getName();
     virtual QImage getLayer(int index);
     virtual int getLayersCount();
@@ -27,6 +28,7 @@ public:
 protected:
     int m_width{0};
     int m_height{0};
+    double m_diagonal{0};
     QString m_name{};
     QList<QImage> m_layers{};
 };
