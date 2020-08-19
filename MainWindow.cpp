@@ -85,9 +85,11 @@ void MainWindow::changeCurrentImage(int index)
 void MainWindow::changeCurrentLayer(int index)
 {
     //вывод выбранного слоя на сцену
-    QImage currentLayer = m_imagesList[ui->fileComboBox->currentIndex()].getLayer(index);
+    Image originalImage = m_imagesList[ui->fileComboBox->currentIndex()];
+    QImage currentLayer = originalImage.getLayer(index);
     m_scene->clear();
-    m_scene->addPixmap(QPixmap::fromImage(currentLayer));
+    m_scene->addPixmap(QPixmap::fromImage(currentLayer).scaled(originalImage.getWidth(),
+                                                               originalImage.getHeight()));
     ui->sizeLabel->setText("Size: " +
                            QString::number(currentLayer.width()) +
                            "x" +
