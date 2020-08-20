@@ -12,7 +12,7 @@
 class Image : public AbstractImage
 {
 public:
-    Image(int width, int height, QString name, QImage image);
+    Image(int width, int height, QString name, QImage image, int layersCount);
     virtual ~Image();
 };
 

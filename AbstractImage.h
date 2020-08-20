@@ -12,7 +12,7 @@
 class AbstractImage
 {
 public:
-    AbstractImage(int width, int height, QString name, QImage image);
+    AbstractImage(int width, int height, QString name, QImage image, int layersCount);
     virtual ~AbstractImage();
 
     virtual int getWidth();
@@ -23,7 +23,8 @@ public:
     virtual int getLayersCount();
     virtual QImage getOriginalImage();
 
-    virtual void addPyramid(QList<QImage> layers);
+//    virtual void addPyramid(QList<QImage> layers);
+    virtual void insertLayer(int layer, QImage & image);
 
 protected:
     int m_width{0};

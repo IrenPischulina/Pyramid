@@ -13,34 +13,51 @@ QList<QImage> NearestNeighborLayerHandler::generatePyramid(double coefficient,
 
     //оригинальное изображение
     QImage * originalImage = new QImage(image.getOriginalImage());
-    int originalWidth = originalImage->width();
-    int originalHeight = originalImage->height();
     //текущий уровень
     int layer = 1;
+    int needLayer = countLayersNumber(*originalImage, coefficient);
+
+    while (layer <= needLayer) {
+        QImage newImage = nearestNeighborMethod(layer, coefficient, originalImage);
+        layers.append(newImage);
+        layer++;
+    }
+    return layers;
+}
+
+int NearestNeighborLayerHandler::countLayersNumber(QImage &image, double coefficient)
+{
+    int originalWidth = image.width();
+    int originalHeight = image.height();
     //последний уровень
     int size;
     if(originalWidth >= originalHeight)
         size = originalWidth;
     else size = originalHeight;
-    int needLayer = log(size) / log(coefficient);
+    return log(size) / log(coefficient);
+}
 
-    while (layer <= needLayer) {
-        double currentCoefficient = pow(1/coefficient, layer);
-        int needWidth = originalWidth * currentCoefficient;
-        int needHeight = originalHeight * currentCoefficient;
-        QImage * newImage = new QImage(needWidth, needHeight, originalImage->format());
-        const uchar *originalImageBits = originalImage->bits();
-        uchar *newImageBits = newImage->bits();
-        double k = 1/currentCoefficient;
+QImage NearestNeighborLayerHandler::getLayer(int layer, double coefficient, AbstractImage &image)
+{
+    //оригинальное изображение
+    QImage * originalImage = new QImage(image.getOriginalImage());
+    return nearestNeighborMethod(layer, coefficient, originalImage);
+}
 
-        for(int i=0; i<needHeight; i++)
-            for(int j=0; j<needWidth; j++)
-                for(int channel=0; channel<4; channel++)
-                    newImageBits[(i*needWidth+j)*4+channel] =
-                            originalImageBits[(int(i*k)*originalWidth+int(j*k))*4+channel];
+QImage NearestNeighborLayerHandler::nearestNeighborMethod(int layer, double coefficient, QImage *originalImage)
+{
+    double currentCoefficient = pow(1/coefficient, layer);
+    int needWidth = originalImage->width() * currentCoefficient;
+    int needHeight = originalImage->height() * currentCoefficient;
+    QImage * newImage = new QImage(needWidth, needHeight, originalImage->format());
+    const uchar *originalImageBits = originalImage->bits();
+    uchar *newImageBits = newImage->bits();
+    double k = 1/currentCoefficient;
 
-        layers.append(*newImage);
-        layer++;
-    }
-    return layers;
+    for(int i=0; i<needHeight; i++)
+        for(int j=0; j<needWidth; j++)
+            for(int channel=0; channel<4; channel++)
+                newImageBits[(i*needWidth+j)*4+channel] =
+                        originalImageBits[(int(i*k)*originalImage->width()+int(j*k))*4+channel];
+    return *newImage;
 }

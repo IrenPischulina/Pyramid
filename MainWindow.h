@@ -35,6 +35,7 @@ private:
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *m_scene;
+    ILayerHandler * m_layerHandler;
     QList<Image> m_imagesList;
 };
 #endif // MAINWINDOW_H

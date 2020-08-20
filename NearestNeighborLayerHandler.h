@@ -15,6 +15,11 @@ public:
 
     QList<QImage> generatePyramid(double coefficient,
                                   AbstractImage &image) override;
+    int countLayersNumber(QImage & image, double coefficient) override;
+    QImage getLayer(int layer, double coefficient, AbstractImage &image) override;
+
+private:
+    QImage nearestNeighborMethod(int layer, double coefficient, QImage *originalImage);
 };
 
 #endif // NEARESTNEIGHBORLAYERHANDLER_H
