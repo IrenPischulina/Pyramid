@@ -44,6 +44,16 @@
         </widget>
        </item>
        <item>
+        <widget class="QLabel" name="coefficientLabel">
+         <property name="text">
+          <string>Coefficient: </string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QDoubleSpinBox" name="coefficientSpinBox"/>
+       </item>
+       <item>
         <widget class="QLabel" name="layerLabel">
          <property name="text">
           <string>Layer: </string>

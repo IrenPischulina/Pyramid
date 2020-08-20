@@ -67,3 +67,13 @@ void AbstractImage::insertLayer(int layer, QImage &image)
         m_layers[layer]=image;
     }
 }
+
+void AbstractImage::setLayersCount(int layersCount)
+{
+    QImage originalImage = getOriginalImage();
+    m_layers.clear();
+    m_layers.append(originalImage);
+    for(int i=1; i<layersCount; i++) {
+        m_layers.append(QImage());
+    }
+}

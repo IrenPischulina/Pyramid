@@ -25,6 +25,7 @@ public:
 
 //    virtual void addPyramid(QList<QImage> layers);
     virtual void insertLayer(int layer, QImage & image);
+    virtual void setLayersCount(int layersCount);
 
 protected:
     int m_width{0};

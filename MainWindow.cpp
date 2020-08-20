@@ -8,6 +8,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     //построение слоев будет осуществляться методом k ближайших соседей
     m_layerHandler = new NearestNeighborLayerHandler();
+    ui->coefficientSpinBox->setValue(m_coefficient);
+    ui->coefficientSpinBox->setMinimum(0.1);
+    ui->coefficientSpinBox->setMaximum(100);
+    connect(ui->coefficientSpinBox,
+            QOverload<double>::of(&QDoubleSpinBox::valueChanged),
+            [this](double d){
+        m_coefficient = d;
+        if(!m_imagesList.isEmpty()) {
+        this->updateLayersList();
+        }
+    });
     //создание сцены и задание параметров отображения скроллбаров
     m_scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(m_scene);
@@ -50,7 +61,7 @@ void MainWindow::addImage(QString &fileName)
     QFile file(fileName);
     QFileInfo info(file);
     QImage image(fileName);
-    int layersCount = m_layerHandler->countLayersNumber(image, 2);
+    int layersCount = m_layerHandler->countLayersNumber(image, m_coefficient);
     Image img(image.width(), image.height(), info.fileName(), image, layersCount);
     int insertIndex=0;
     if(m_imagesList.size() == 1) {
@@ -76,7 +87,8 @@ void MainWindow::addImage(QString &fileName)
 
 void MainWindow::changeCurrentImage(int index)
 {
-    QImage originalImage = m_imagesList[index].getOriginalImage();
+    m_currentImageIndex = index;
+    QImage originalImage = m_imagesList[m_currentImageIndex].getOriginalImage();
     m_scene->clear();
     m_scene->addPixmap(QPixmap::fromImage(originalImage));
     ui->sizeLabel->setText("Size: " +
@@ -84,23 +96,17 @@ void MainWindow::changeCurrentImage(int index)
                            "x" +
                            QString::number(originalImage.height()));
 
-    //обновление списка номеров слоев изображения
-    ui->layerComboBox->clear();
-    int layersCount = m_layerHandler->countLayersNumber(originalImage, 2);
-    for(int i=0; i<layersCount; i++)
-    {
-        ui->layerComboBox->addItem(QString::number(i));
-    }
+    updateLayersList();
 }
 
 void MainWindow::changeCurrentLayer(int index)
 {
     //вывод выбранного слоя на сцену
-    Image originalImage = m_imagesList[ui->fileComboBox->currentIndex()];
+    Image originalImage = m_imagesList[m_currentImageIndex];
     QImage currentLayer;
     if(originalImage.getLayer(index) == QImage()) {
-        currentLayer = m_layerHandler->getLayer(index, 2, originalImage);
-        m_imagesList[ui->fileComboBox->currentIndex()].insertLayer(index, currentLayer);
+        currentLayer = m_layerHandler->getLayer(index, m_coefficient, originalImage);
+        m_imagesList[m_currentImageIndex].insertLayer(index, currentLayer);
     } else {
         currentLayer = originalImage.getLayer(index);
     }
@@ -111,5 +117,18 @@ void MainWindow::changeCurrentLayer(int index)
                            QString::number(currentLayer.width()) +
                            "x" +
                            QString::number(currentLayer.height()));
+}
+
+void MainWindow::updateLayersList()
+{
+    QImage originalImage = m_imagesList[m_currentImageIndex].getOriginalImage();
+    int layersCount = m_layerHandler->countLayersNumber(originalImage, m_coefficient);
+    m_imagesList[m_currentImageIndex].setLayersCount(layersCount);
+    //обновление списка номеров слоев изображения
+    ui->layerComboBox->clear();
+    for(int i=0; i<layersCount; i++)
+    {
+        ui->layerComboBox->addItem(QString::number(i));
+    }
 }
 

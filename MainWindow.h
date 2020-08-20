@@ -31,11 +31,14 @@ private:
     void addImage(QString &fileName);
     void changeCurrentImage(int index);
     void changeCurrentLayer(int index);
+    void updateLayersList();
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *m_scene;
     ILayerHandler * m_layerHandler;
     QList<Image> m_imagesList;
+    double m_coefficient{2.0};
+    int m_currentImageIndex{};
 };
 #endif // MAINWINDOW_H
